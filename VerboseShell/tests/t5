@@ -1,0 +1,11 @@
+echocmd on
+setprompt ""
+
+/bin/echo "Testing multiple parameters"
+
+/bin/ls -l /tmp
+
+/bin/cat /etc/hosts /etc/modules
+
+/bin/df -h .
+

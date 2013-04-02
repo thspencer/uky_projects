@@ -1,0 +1,13 @@
+echocmd on
+setprompt ""
+
+/bin/echo "Testing cd"
+
+cd /tmp
+/bin/ls
+
+cd /etc
+/bin/cat hosts
+
+
+

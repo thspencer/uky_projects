@@ -1,0 +1,25 @@
+echocmd on
+setprompt ""
+
+/bin/echo "Testing Variables"
+
+setvar $prefix "README"
+/bin/echo $prefix
+
+/bin/ls $prefix.txt
+
+setvar $prefix "/var"
+/bin/echo $prefix
+
+/bin/ls $prefix
+
+/bin/ls $prefix/log
+
+setvar $postfix ".gz"
+
+/bin/echo $postfix
+
+/bin/ls $prefix/log/kern.log.2$postfix
+
+
+

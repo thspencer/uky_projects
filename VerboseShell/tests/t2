@@ -1,0 +1,11 @@
+setprompt "New Prompt> "
+
+setprompt "Prompt String 2% "
+
+setprompt "% "
+
+setprompt ""
+
+setprompt "The previous prompt was nothing> "
+
+setprompt "vsh % "

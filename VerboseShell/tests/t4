@@ -1,0 +1,13 @@
+echocmd on
+setprompt ""
+
+/bin/echo "Testing single parameters"
+
+/bin/ls /tmp
+
+/bin/cat /etc/hosts
+
+/bin/df .
+
+/bin/uname -r
+
