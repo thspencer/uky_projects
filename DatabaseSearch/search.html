@@ -1,0 +1,125 @@
+<!--
+  CS216PROGRAM5: cs216.html
+         AUTHOR: Taylor Spencer
+           DATE: 11/29/2012
+
+  DESCRIPTION:
+     This is the displayed HTML page that the user sees upon loading
+     the website;
+
+     Precondition (upon submission):
+         Valid selection of program type, request type, request value;
+
+     Postcondition:
+         name/value pairs representing program type, request type, request value
+         to cs216.cgi script;
+-->
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<HTML>
+
+<!--START OF PAGE HEAD-->
+<HEAD>
+<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+<TITLE>The Taylor Spencer Data Search Engine</TITLE>
+
+<!--CSS - FULLPAGE BACKGROUND-->
+<STYLE TYPE="text/css">
+html{
+  background: url(uklogo.png) no-repeat center center fixed;
+  /* using full URL instead of localized to ensure no load errors */
+  background-size: cover;
+}
+</STYLE>
+
+<!--CSS - FOOTER PUSHDOWN-->
+<STYLE TYPE="text/css">
+html,
+body {
+   margin:0;
+   padding:0;
+   height:100%;
+}
+#container {
+   min-height:100%;
+   position:relative;
+}
+#header {
+   padding:10px;
+}
+#body {
+   padding:10px;
+   padding-bottom:60px;   /* footer height */
+}
+#footer {
+   position:absolute;
+   bottom:0;
+   width:100%;
+   height:60px;   /* footer height */
+}
+</STYLE>
+<!--END CSS-->
+
+</HEAD>
+<!-- END OF PAGE HEAD-->
+
+<!--START OF PAGE BODY-->
+<BODY>
+<!--START CONTAINER DIVISION-->
+<DIV ID="container">
+<!--START HEADER DIVISION-->
+<DIV ID="header">
+
+<H2 ALIGN="center">
+<FONT COLOR="white" FACE="wide latin">
+<B>Spartan University
+<BR>Database Search</B>
+</FONT></H2>
+
+</DIV>
+<!--END HEADER DIVISION-->
+
+<!--START BODY DIVISION-->
+<DIV ID="body">
+<FONT COLOR="white">
+
+<!--START OF FORM DATA-->
+<FORM ACTION="cs216.cgi" METHOD="POST">
+<P>
+<B>Language:</B>
+<BR><INPUT TYPE="RADIO" NAME="lang" VALUE="c++" CHECKED>C++
+<BR><INPUT TYPE="RADIO" NAME="lang" VALUE="perl">PERL
+
+<BR><B>Data to search for:</B>
+<BR><INPUT TYPE="RADIO" NAME="type" VALUE="id" CHECKED>Student by student ID
+<BR><INPUT TYPE="RADIO" NAME="type" VALUE="name">Student by student name
+</P>
+
+<P>
+<BR><B>Student ID or last name to search for:
+<INPUT TYPE="TEXT" MAXLENGTH="20" REQUIRED="required" NAME="search" VALUE="">
+<INPUT TYPE="SUBMIT" VALUE="Submit">
+</P>
+
+</FORM>
+<!--END OF FORM DATA-->
+
+</FONT>
+
+</DIV>
+<!--END BODY DIVISION-->
+
+<!--START FOOTER DIVISION-->
+<DIV ID="footer">
+<H5 align="center"><FONT COLOR="white">
+CS 216 - Program 5
+<BR>Copyright &copy; 2012, Taylor Spencer.  All rights reserved.
+</FONT></H5>
+</DIV>
+<!--END FOOTER DIVISION-->
+
+</DIV>
+<!--END CONTAINER DIVISION-->
+</BODY>
+<!--END OF PAGE BODY-->
+</HTML>
