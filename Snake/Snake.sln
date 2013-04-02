@@ -1,0 +1,24 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Snake", "Snake\Snake\Snake.csproj", "{571B63B6-7413-4CE0-9966-F30E49353D0F}"
+EndProject
+Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "SnakeContent", "Snake\SnakeContent\SnakeContent.contentproj", "{01D2B027-2136-496F-AE2F-017254F00D3B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{571B63B6-7413-4CE0-9966-F30E49353D0F}.Debug|x86.ActiveCfg = Debug|x86
+		{571B63B6-7413-4CE0-9966-F30E49353D0F}.Debug|x86.Build.0 = Debug|x86
+		{571B63B6-7413-4CE0-9966-F30E49353D0F}.Release|x86.ActiveCfg = Release|x86
+		{571B63B6-7413-4CE0-9966-F30E49353D0F}.Release|x86.Build.0 = Release|x86
+		{01D2B027-2136-496F-AE2F-017254F00D3B}.Debug|x86.ActiveCfg = Debug|x86
+		{01D2B027-2136-496F-AE2F-017254F00D3B}.Release|x86.ActiveCfg = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
