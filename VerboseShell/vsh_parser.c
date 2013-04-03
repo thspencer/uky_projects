@@ -45,10 +45,13 @@ int CommandBuilder( Input* input, char** parsedCMD )
             return 0;
         }
 
-        parsedCMD[indexC] = input->tokenValue;
+        /* store token if not a newline */
+        if ( input->command[0] != '\n' ){
+            parsedCMD[indexC] = input->tokenValue;
 
-        /* null terminate end of string */
-        parsedCMD[indexC][BUFFER_LENGTH-1] = '\0';
+            /* null terminate end of string */
+            parsedCMD[indexC][BUFFER_LENGTH-1] = '\0';
+        }
 
         indexC++;
 
@@ -115,11 +118,12 @@ Input* ParseInput( Input* input )
         /* create next input node on encountering a space AND more input exists*/
         if ( isspace( input->command[indexRoot] )){
 
-            /* reset counter */
-            indexRoot++;
+            /* reset index for next node */
             indexCurr = 0;
 
-            if ( input->command[indexRoot] != NULL ){
+            if ( input->command[indexRoot] == '\n' ||
+                 input->command[indexRoot+1] != NULL ){
+
                 Input* next = CreateInputNode();
 
                 /* update next pointer */
@@ -127,7 +131,16 @@ Input* ParseInput( Input* input )
 
                 /* move current to next */
                 current = current->next;
+
+                /* store the EOL token in new node */
+                if ( input->command[indexRoot] == '\n' ){
+
+                    current->command[indexCurr++] = input->command[indexRoot];
+                }
             }
+
+            /* increment input index */
+            indexRoot++;
         } else if ( input->command[indexRoot] == '\"' ){
             /* assume there is a string close if the open exists */
             _bool closureFound = FALSE;
@@ -192,7 +205,7 @@ Input* ParseInput( Input* input )
                 indexCurr = 0;
             }
         } else {
-            /* assign the character input to current command seqence */
+            /* assign the character input to current command sequence */
             current->command[indexCurr++] = input->command[indexRoot++];
         }
     }
@@ -288,9 +301,9 @@ void ParseCommand( Input* input )
 void ParseMeta( Input* input )
 {
     char meta[] = { "metachar" };
-    char eol[] = { "end-of-line" };
-    char com[] = { "%" };
-    char var[] = { "variable" };
+    char eol[]  = { "end-of-line" };
+    char com[]  = { "%" };
+    char var[]  = { "variable" };
 
     while ( input != NULL ){
         int index;
@@ -301,6 +314,12 @@ void ParseMeta( Input* input )
             input = input->next;
 
             continue;
+        }
+
+        /* detect EOL token */
+        if ( input->command[0] == '\n' ){
+                snprintf( input->tokenType,  sizeof input->tokenType, "%s", eol );
+                snprintf( input->tokenValue, sizeof input->tokenValue, "EOL" );
         }
 
         /* must be at beginning of line */
@@ -338,11 +357,6 @@ void ParseMeta( Input* input )
                 snprintf( input->command,    sizeof input->command, "exit" );
                 snprintf( input->tokenType,  sizeof input->tokenType, "end-of-file" );
                 snprintf( input->tokenValue, sizeof input->tokenValue, "EOF" );
-            }
-
-            if ( input->command[index] == '\n' ){
-                snprintf( input->tokenType,  sizeof input->tokenType, "%s", eol );
-                snprintf( input->tokenValue, sizeof input->tokenValue, "EOL" );
             }
 
             if ( input->command[index] == '|' ){
