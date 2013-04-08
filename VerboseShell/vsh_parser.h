@@ -8,6 +8,7 @@
 int    CommandBuilder( Input*, char** );
 int    InputPrompt( char** );
 Input* ParseInput( Input* );
+Input* ScanForMultiples( Input*, char* );
 void   ParseCommand( Input* input );
 void   ParseMeta( Input* );
 void   ParseWord( Input* );

@@ -20,8 +20,6 @@ struct Input{
     char command[BUFFER_LENGTH];    /* the actual input command */
     char tokenType[15];             /* the token type for this sequence */
     char tokenValue[BUFFER_LENGTH]; /* the token value for this sequence */
-    char append_L[BUFFER_LENGTH];
-    char append_R[BUFFER_LENGTH];
 
     _bool isRoot;
     _bool isCMD;

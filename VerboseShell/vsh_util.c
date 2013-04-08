@@ -25,8 +25,6 @@ Input* CreateInputNode()
     initArray( node->command,    retLen( node->command ),    NULL );
     initArray( node->tokenType,  retLen( node->tokenType ),  NULL );
     initArray( node->tokenValue, retLen( node->tokenValue ), NULL );
-    initArray( node->append_L,   retLen( node->append_L ),   NULL );
-    initArray( node->append_R,   retLen( node->append_R ),   NULL );
 
     return node;
 }

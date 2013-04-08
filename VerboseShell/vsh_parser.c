@@ -302,7 +302,6 @@ void ParseMeta( Input* input )
 {
     char meta[] = { "metachar" };
     char eol[]  = { "end-of-line" };
-    char com[]  = { "%" };
     char var[]  = { "variable" };
 
     while ( input != NULL ){
@@ -325,30 +324,30 @@ void ParseMeta( Input* input )
         /* must be at beginning of line */
         if ( input->isRoot == TRUE && input->command[0] == '%' ){
             snprintf( input->tokenType,  sizeof input->tokenType,  "%s", meta );
-            snprintf( input->tokenValue, sizeof input->tokenValue, "%s", com );
-            snprintf( input->append_R,   sizeof input->append_R,   "%s", strtok( input->command, com ));
+            snprintf( input->tokenValue, sizeof input->tokenValue, "%s", input->command );
+            //snprintf( input->append_R,   sizeof input->append_R,   "%s", strtok( input->command, com ));
         }
 
         /* must be first character of sequence */
 
         /* WORK IN PROGRESS */
         if ( input->command[0] == '$' ){
-            int index = 0;
+            //int index = 0;
 
             snprintf( input->tokenType,  sizeof input->tokenType,  "%s", var );
             snprintf( input->tokenValue, sizeof input->tokenValue, "%s", input->command );
-            snprintf( input->append_R,   sizeof input->append_R,   "%s", strtok( input->command, "$" ));
+            //snprintf( input->append_R,   sizeof input->append_R,   "%s", strtok( input->command, "$" ));
 
-            while ( input->append_R[index] != NULL ){
-                if ( isalpha( input->append_R[index] ) == 0 ){
-                    printf("\tERROR: variable contains invalid characters\n");
+            //while ( input->append_R[index] != NULL ){
+              //  if ( isalpha( input->append_R[index] ) == 0 ){
+                //    printf("\tERROR: variable contains invalid characters\n");
 
-                    snprintf( input->tokenType,  sizeof input->tokenType,  "word" );
-                    snprintf( input->tokenValue, sizeof input->tokenValue, "%s", input->command );
-                }
+                  //  snprintf( input->tokenType,  sizeof input->tokenType,  "word" );
+                    //snprintf( input->tokenValue, sizeof input->tokenValue, "%s", input->command );
+               // }
 
-                index++;
-            }
+               // index++;
+            //}
         }
 
         for ( index = 0; input->command[index] != '\0'; index++ ){
@@ -360,37 +359,106 @@ void ParseMeta( Input* input )
             }
 
             if ( input->command[index] == '|' ){
-                snprintf( input->tokenType,  sizeof input->tokenType,  "%s", meta );
-                snprintf( input->tokenValue, sizeof input->tokenValue, "|" );
-                snprintf( input->append_L,   sizeof input->append_L,   "%s", strtok( input->command, "|" ));
-                snprintf( input->append_R,   sizeof input->append_R,   "%s", strtok( NULL, "|" ));
+
+                input = ScanForMultiples( input, "|" );
             }
 
             if ( input->command[index] == '>' ){
-                snprintf( input->tokenType,  sizeof input->tokenType,  "%s", meta );
-                snprintf( input->tokenValue, sizeof input->tokenValue, " %s ", input->command );
-                snprintf( input->append_L,   sizeof input->append_L,   "%s", strtok( input->command, ">" ));
-                snprintf( input->append_R,   sizeof input->append_R,   "%s", strtok( NULL, ">" ));
+
+                input = ScanForMultiples( input, ">" );
             }
 
             if ( input->command[index] == '<' ){
-                snprintf( input->tokenType,  sizeof input->tokenType,  "%s", meta );
-                snprintf( input->tokenValue, sizeof input->tokenValue, "<" );
-                snprintf( input->append_L,   sizeof input->append_L,   "%s", strtok( input->command, "<" ));
-                snprintf( input->append_R,   sizeof input->append_R,   "%s", strtok( NULL, "<" ));
+
+                input = ScanForMultiples( input, "<" );
             }
 
             if ( input->command[index] == '&' ){
-                snprintf( input->tokenType,  sizeof input->tokenType,  "%s", meta );
-                snprintf( input->tokenValue, sizeof input->tokenValue, "&" );
-                snprintf( input->append_L,   sizeof input->append_L,   "%s", strtok( input->command, "&" ));
-                snprintf( input->append_R,   sizeof input->append_R,   "%s", strtok( NULL, "&" ));
+
+                input = ScanForMultiples( input, "&" );
             }
         }
-
         /* set next node */
         input = input->next;
     }
+}
+
+/* detect multiples of a meta-character */
+/* currently only detects up to 2 characters per argument, should optimize */
+Input* ScanForMultiples( Input* input, char* m ){
+
+    char meta[] = { "metachar" };
+    char cmd[BUFFER_LENGTH];
+    char* tok;
+    char* metachar = strchr( input->command, m[0] );
+
+    /* keep original command */
+    snprintf( cmd, sizeof cmd, "%s", input->command );
+    /* tokenize first part of string */
+    tok = strtok( cmd, m );
+
+    if ( tok != NULL ){
+        Input* next = CreateInputNode();
+
+        /* determine if string is on left or right side of meta-character */
+        if ( cmd[0] == m[0] ){
+            /* current node will contain the meta-character */
+            snprintf( input->command, sizeof input->command, "%s", m );
+            /* next node will contain the string to the right of the token */
+            snprintf( next->command, sizeof next->command, "%s", tok );
+
+            /* store original nodes->next pointer */
+            next->next = input->next;
+            input->next = next;
+
+        } else {
+            /* current node will contain the string to left of token */
+            snprintf( input->command, sizeof input->command, "%s", tok );
+            /* next node will contain the meta-character */
+            snprintf( next->command, sizeof next->command, "%s", m );
+
+            /* store original next nodes pointer */
+            next->next = input->next;
+            input->next = next;
+            input = input->next;
+        }
+    }
+
+    snprintf( input->tokenType,  sizeof input->tokenType,  "%s", meta );
+    snprintf( input->tokenValue, sizeof input->tokenValue, "%s", input->command );
+
+    /* check for additional strings after meta-character */
+    tok = strtok( NULL, m );
+
+    if ( tok != NULL ){
+
+        /* parse into separate nodes if there is no space between tokens */
+        Input* next = CreateInputNode();
+
+        /* next node will contain the right hand token */
+        snprintf( next->command, sizeof next->command, "%s", tok );
+
+        /* store original next nodes pointer */
+        next->next = input->next;
+        /* redirect current node to new next node so will be parsed again */
+        input->next = next;
+        input = input->next;
+    }
+
+    /* see if there are additional strings past the current position */
+    metachar = strchr( metachar+1, m[0] );
+
+    if ( metachar != NULL ){
+
+        Input* next = CreateInputNode();
+
+        snprintf( next->command, sizeof next->command, "%s", metachar);
+
+        next->next = input->next;
+        input->next = next;
+    }
+
+    return input;
 }
 
 /* prints debug output of processed tokens */
@@ -408,9 +476,9 @@ void PrintTokens( Input* input )
             printf("SEQUENCE: %s\n", input->command );
         }
 
-        /* print token info and concatenate if split */
+        /* print token info */
         printf("TOKEN TYPE: %s\t", input->tokenType );
-        printf("TOKEN: %s%s%s \t", input->append_L, input->tokenValue, input->append_R );
+        printf("TOKEN: %s\t", input->tokenValue );
 
         /* determine what token is used for */
         if ( input->isCMD ){
@@ -422,7 +490,7 @@ void PrintTokens( Input* input )
                 printf("USAGE: exit" );
 
             } else {
-                printf("USAGE: %s", input->tokenType );
+                printf("USAGE: %s\n", input->tokenType );
             }
         } else if ( input->isRoot ){
             printf("USAGE: cmd\n" );
